@@ -1,0 +1,54 @@
+import random
+def create_board(size):
+    return [['O' for _ in range(size)] for _ in range(size)]
+def print_board(board):
+    for row in board:
+        print(" ".join(row))
+def place_ship(board):
+    ship_row = random.randint(0, len(board) - 1)
+    ship_col = random.randint(0, len(board[0]) - 1)
+    while board[ship_row][ship_col] == 'S':
+        ship_row = random.randint(0, len(board) - 1)
+        ship_col = random.randint(0, len(board[0]) - 1)
+    board[ship_row][ship_col] = 'S'
+    return ship_row, ship_col
+def get_guess(board):
+    while True:
+        try:
+            row = int(input("Guess Row (1 to 5): ".format(len(board) - 1)))
+            col = int(input("Guess Col (1 to 5): ".format(len(board[0]) - 1)))
+            row -= 1
+            col -= 1
+            
+            if 0 <= row < len(board) and 0 <= col < len(board[0]):
+                return row, col
+            else:
+                print("Invalid input. Row and column must be within the board.")
+        except ValueError:
+            print("Invalid input. Please enter integers for row and column.")
+def play_battleship(player):
+    size = 5
+    turns = 4
+    board = create_board(size)
+    ship_row, ship_col = place_ship(board)
+    for turn in range(turns):
+        print("\nTurn", turn + 1)
+        guess_row, guess_col = get_guess(board)
+
+        if board[guess_row][guess_col] == 'S':
+            print("Congratulations, {}! You hit the enemy battleship!".format(player))
+            break
+        else:
+            print("Missed the enemy battleship!")
+        if turn == turns - 1:
+            print("\n{}'s Game Over. The enemy battleship was at row {} and column {}.".format(player, ship_row+1, ship_col+1))
+            print("{}'s Board:".format(player))
+            print_board(board)
+if _name_ == "_main_":
+    print("Let's play Battleship!")
+    # Player 1
+    input("Player 1, press Enter to place your battleship.")
+    play_battleship("Player 1")
+    # Player 2
+    input("\nPlayer 2, press Enter to place your battleship.")
+    play_battleship("Player 2")
